@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+<filters xmlns="http://schemas.haulmont.com/thesis/5.1/filters.xsd">
+    <!-- Фильтр "По Банку" -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="credit$CreditOrder.lookup"
+                          code="CreditOrder.SysFilter.ByBank"
+                          entityName="credit$CreditOrder"/>
+        </filterEntities>
+        <conditions>
+            <filter>
+                <and>
+                    <c name="bank" class="com.haulmont.thesis.core.entity.Bank"
+                       caption="msg://com.haulmont.thesis.core.entity/Bank"
+                       type="CUSTOM" entityAlias="d" join="join d.credit b">
+                        b.id in (select k.id from credit$Credit k join k.bank
+                        a where
+                        a.id = :component$genericFilter.bank59838)
+                        <param name="component$genericFilter.bank59838"
+                               javaClass="com.company.bookstore.entity.Bank">
+                            NULL
+                        </param>
+                    </c>
+                </and>
+            </filter>
+        </conditions>
+    </filterDescriptor>
+    <!-- Фильтр "По содержимому" -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="credit$CreditOrder.lookup"
+                          code="Doc.SysFilter.ByContent"
+                          entityName="credit$CreditOrder"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/by-content-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+
+    <!-- Фильтр по виду документа -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="credit$CreditOrder.lookup"
+                          code="Doc.SysFilter.ByDocumentKind"
+                          entityName="credit$CreditOrder"/>
+            <filterEntity screen="credit$CreditOrder.templateBrowse"
+                          code="Doc.SysFilter.ByDocumentKind"
+                          entityName="credit$CreditOrder"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/doc-kind-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+
+    <!-- Фильтр по участию в процессе и состоянию -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="credit$CreditOrder.lookup"
+                          code="SysFilter.ByProcRole"
+                          entityName="credit$CreditOrder"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/proc-and-state-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+
+    <!-- Фильтр "Moй отдел" -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="credit$CreditOrder.lookup"
+                          code="SysFilter.MyDepartment"
+                          entityName="credit$CreditOrder"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/my-department-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+</filters>
